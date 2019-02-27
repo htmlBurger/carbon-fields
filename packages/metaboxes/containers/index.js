@@ -17,6 +17,8 @@ import './user-meta';
 import Container from '../components/container';
 import { getContainerType, registerContainerType } from './registry';
 
+export { registerContainerType, Container };
+
 /**
  * Registers the containers.
  */

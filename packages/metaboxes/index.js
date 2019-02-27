@@ -10,8 +10,14 @@ import { addAction } from '@wordpress/hooks';
 import './store';
 import './fields';
 import initializeMonitors from './monitors';
-import initializeContainers from './containers';
+import { default as initializeContainers, registerContainerType, Container } from './containers';
+
 import isGutenberg from './utils/is-gutenberg';
+
+/**
+ * Public API
+ */
+export { registerContainerType, Container };
 
 /**
  * Sets the locale data for the package type

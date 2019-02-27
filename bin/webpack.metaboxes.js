@@ -15,6 +15,10 @@ const config = {
 	entry: {
 		metaboxes: './packages/metaboxes/index.js'
 	},
+	output: {
+		library: [ 'cf', '[name]' ],
+		libraryTarget: 'this'
+	},
 	externals: {
 		'react': [ 'cf', 'vendor', 'react' ],
 		'react-dom': [ 'cf', 'vendor', 'react-dom' ],
