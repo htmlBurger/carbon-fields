@@ -786,6 +786,15 @@ abstract class Container implements Datastore_Holder_Interface {
 	}
 
 	/**
+ 	 * Adds a notification to be shown.
+     *
+	 * @param string $notification
+  	 */
+	public function add_notification ($notification) {
+        $this->notifications[] = $notification;
+    }
+
+	/**
 	 * Returns an array that holds the container data, suitable for JSON representation.
 	 *
 	 * @param bool $load  Should the value be loaded from the database or use the value from the current instance.
