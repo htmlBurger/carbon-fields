@@ -174,7 +174,7 @@ abstract class Key_Value_Datastore extends Datastore {
 	public function save( Field $field ) {
 		$value_set = $field->get_full_value();
 
-		if ( empty( $value_set ) && $field->get_value_set()->keepalive() ) {
+		if ( empty( $value_set ) || $field->get_value_set()->keepalive() ) {
 			$storage_key = $this->key_toolset->get_storage_key(
 				$field->is_simple_root_field(),
 				$this->get_full_hierarchy_for_field( $field ),
