@@ -1,0 +1,265 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Carbon Fields UI\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-09-15 11:13+0000\n"
+"PO-Revision-Date: 2023-09-15 13:52+0200\n"
+"Last-Translator: d79\n"
+"Language-Team: Italiano\n"
+"Language: it_IT\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Poedit 3.3.1\n"
+
+#: packages/blocks/components/block-edit/index.js:214
+msgid "Show preview"
+msgstr "Visualizza anteprima"
+
+#: packages/blocks/components/block-edit/index.js:215
+msgid "Hide preview"
+msgstr "Nascondi anteprima"
+
+#: packages/blocks/components/block-edit/index.js:286
+msgid "Fields"
+msgstr "Campi"
+
+#: packages/blocks/components/not-supported-field/index.js:14
+msgid "Field of type '%s' is not supported in Gutenberg."
+msgstr "Il campo di tipo '%s' non è supportato in Gutenberg."
+
+#: packages/blocks/components/server-side-render/index.js:129
+msgid "Error loading block: %s"
+msgstr "Errore caricamento blocco: %s"
+
+#: packages/blocks/components/server-side-render/index.js:135
+msgid "No results found."
+msgstr "Nessun risultato trovato."
+
+#: packages/blocks/fields/datetime/index.js:59
+#: packages/core/fields/date/index.js:15
+#: packages/metaboxes/fields/datetime/index.js:9
+msgid "Select Date"
+msgstr "Seleziona Data"
+
+#: packages/blocks/fields/file/index.js:16
+#: packages/metaboxes/fields/file/index.js:11
+msgid "Use File"
+msgstr "Utilizza File"
+
+#: packages/blocks/fields/file/index.js:17
+#: packages/metaboxes/fields/file/index.js:12
+msgid "Select File"
+msgstr "Seleziona File"
+
+#: packages/blocks/fields/image/index.js:11
+#: packages/metaboxes/fields/image/index.js:11
+msgid "Use Image"
+msgstr "Utilizza Immagine"
+
+#: packages/blocks/fields/image/index.js:12
+#: packages/metaboxes/fields/image/index.js:12
+msgid "Select Image"
+msgstr "Seleziona Immagine"
+
+#: packages/blocks/fields/media-gallery/index.js:16
+#: packages/metaboxes/fields/media-gallery/index.js:16
+msgid "Use Attachments"
+msgstr "Utilizza Allegati"
+
+#: packages/blocks/fields/media-gallery/index.js:17
+#: packages/metaboxes/fields/media-gallery/index.js:17
+msgid "Select Attachments"
+msgstr "Seleziona Allegati"
+
+#: packages/core/components/no-options/index.js:14
+msgid "No options."
+msgstr "Nessuna opzione."
+
+#: packages/core/components/search-input/index.js:30
+msgid "Search..."
+msgstr "Cerca..."
+
+#: packages/core/fields/association/index.js:169
+msgid "Maximum number of items reached (%s items)"
+msgstr "Numero massimo di elementi raggiunto (%s elementi)"
+
+#: packages/core/fields/association/index.js:269
+msgid "Showing %1$d of %2$d results"
+msgstr "Visualizzando %1$d di %2$d risultati"
+
+#: packages/core/fields/association/index.js:283
+msgid "Thumbnail"
+msgstr "Anteprima"
+
+#: packages/core/fields/association/index.js:305
+msgid "Edit"
+msgstr "Modifica"
+
+#: packages/core/fields/association/index.js:313
+msgid "Add"
+msgstr "Aggiungi"
+
+#: packages/core/fields/association/index.js:365
+#: packages/core/fields/complex/group.js:163
+msgid "Remove"
+msgstr "Rimuovi"
+
+#: packages/core/fields/association/index.js:466
+msgid "An error occurred while trying to fetch association options."
+msgstr ""
+"Si è verificato un errore tentando di ottenere le opzioni dell'associazione."
+
+#: packages/core/fields/association/index.js:519
+#: packages/core/fields/complex/index.js:428
+#: packages/core/hocs/with-validation/required.js:20
+msgid "This field is required."
+msgstr "Il campo è richiesto."
+
+#: packages/core/fields/association/index.js:523
+msgid "Minimum number of items not reached (%s items)"
+msgstr "Numero minimo di elementi non raggiunto (%s elementi)"
+
+#: packages/core/fields/color/index.js:106
+msgid "Clear"
+msgstr "Pulisci"
+
+#: packages/core/fields/color/index.js:92
+msgid "Select a color"
+msgstr "Seleziona un colore"
+
+#: packages/core/fields/complex/group.js:154
+msgid "Duplicate"
+msgstr "Duplica"
+
+#: packages/core/fields/complex/group.js:172
+msgid "Collapse"
+msgstr "Comprimi"
+
+#: packages/core/fields/complex/index.js:146
+msgid "Couldn't create the label of group - %s"
+msgstr "Non ho potuto creare l'etichetta del gruppo - %s"
+
+#: packages/core/fields/complex/index.js:344
+msgid "There are no entries yet."
+msgstr "Non ci sono ancora inserimenti."
+
+#: packages/core/fields/complex/index.js:401
+msgid "Expand All"
+msgstr "Espandi Tutto"
+
+#: packages/core/fields/complex/index.js:401
+msgid "Collapse All"
+msgstr "Comprimi Tutto"
+
+#: packages/core/fields/complex/index.js:435
+msgid "Minimum number of rows not reached (%1$d %2$s)"
+msgstr "Numero minimo di righe non raggiunto (%1$d %2$s)"
+
+#: packages/core/fields/complex/index.js:82
+msgid "Add %s"
+msgstr "Aggiungi %s"
+
+#: packages/core/fields/map/index.js:165
+msgid "The address could not be found."
+msgstr "Non è stato possibile trovare l'indirizzo."
+
+#: packages/core/fields/map/index.js:167
+msgid "Geocode was not successful for the following reason: "
+msgstr "Geocode non è riuscito per questa ragione: "
+
+#: packages/core/fields/map/index.js:185
+msgid "Error alert"
+msgstr "Avviso errore"
+
+#: packages/core/fields/oembed/index.js:187
+msgid "An error occurred while trying to fetch oembed preview."
+msgstr ""
+"Si è verificato un errore tentando di ottenere l'anteprima dell'oembed."
+
+#: packages/core/fields/oembed/index.js:202
+msgid "Not Found"
+msgstr "Non Trovato"
+
+#: packages/core/fields/rich-text/index.js:123
+msgid "Visual"
+msgstr "Visuale"
+
+#: packages/core/fields/rich-text/index.js:127
+msgid "Text"
+msgstr "Testo"
+
+#: packages/core/fields/set/index.js:110
+msgid "Show All Options"
+msgstr "Mostra Tutte le Opzioni"
+
+#: packages/core/fields/set/index.js:111
+msgid "Show Less Options"
+msgstr "Mostra Meno Opzioni"
+
+#: packages/core/fields/sidebar/index.js:110
+msgid "Please enter the name of the new sidebar:"
+msgstr "Inserire il nome della nuova sidebar:"
+
+#: packages/core/fields/sidebar/index.js:128
+msgid "An error occurred while trying to create the sidebar."
+msgstr "Si è verificato un errore tentando di creare la sidebar."
+
+#: packages/core/fields/sidebar/index.js:58
+msgid "Please choose"
+msgstr "Scegli"
+
+#: packages/core/fields/time/index.js:16
+msgid "Select Time"
+msgstr "Seleziona Orario"
+
+#: packages/core/hocs/with-conditional-logic/index.js:87
+msgid "An unknown field is used in condition - \"%s\""
+msgstr "Un campo sconosciuto è usato nella condizione - \"%s\""
+
+#: packages/core/registry/index.js:40
+msgid "%1$s type must be a string."
+msgstr "%1$s dev'essere una stringa."
+
+#: packages/core/registry/index.js:46
+msgid "%1$s %2$s is already registered."
+msgstr "%1$s %2$s è già registrato."
+
+#: packages/core/registry/index.js:54
+msgid "The \"component\" param must be a function."
+msgstr "Il parametro \"componente\" deve essere una funzione."
+
+#: packages/core/registry/index.js:79
+msgid "The provided context isn't a valid one. Must be one of - %s ."
+msgstr "Il contesto dato non è valido. Dev'essere uno di - %s ."
+
+#: packages/core/registry/index.js:89
+msgid "%s %s isn't registered."
+msgstr "%s %s non è registrato."
+
+#: packages/core/utils/api-fetch.js:19
+msgid "An error occured."
+msgstr "Si è verificato un errore."
+
+#: packages/core/utils/fetch-attachments-data.js:24
+msgid "An error occurred while trying to fetch files data."
+msgstr "Si è verificato un errore tentando di ottenere i dati dei file."
+
+#: packages/metaboxes/containers/index.js:54
+msgid "Could not find DOM element for container \"%1$s\"."
+msgstr "Non ho trovato l'elemento DOM per il contenitore \"%1$s\"."
+
+#: packages/metaboxes/monitors/conditional-display/conditions/base.js:52
+msgid "Unsupported container condition comparison operator used - \"%1$s\"."
+msgstr ""
+"Operatore di comparazione della condizione del contenitore non supportato - "
+"\"%1$s\"."
+
+#: packages/metaboxes/monitors/conditional-display/handler/index.js:56
+msgid "Unsupported container condition - \"%1$s\"."
+msgstr "Condizione del contenitore non supportata - \"%1$s\"."
+
+#: packages/metaboxes/monitors/conditional-display/handler/index.js:74
+msgid "Unsupported container condition relation used - \"%1$s\"."
+msgstr "Relazione della condizione del contenitore non supportata - \"%1$s\"."
