@@ -17,7 +17,13 @@ import {
  */
 import './style.scss';
 import SearchInput from '../../components/search-input';
-import GoogleMap from './google-map';
+import GoogleMap, { googleGeocode } from './google-map';
+import LeafletMap, { nominatimGeocode } from './leaflet-map';
+
+const isGoogleMapsLoaded = Boolean( document.querySelector( 'script#carbon-google-maps-js' ) );
+
+const Map = isGoogleMapsLoaded ? GoogleMap : LeafletMap;
+const geocode = isGoogleMapsLoaded ? googleGeocode : nominatimGeocode;
 
 class MapField extends Component {
 	/**
@@ -30,7 +36,7 @@ class MapField extends Component {
 		if ( address ) {
 			this.props.onGeocodeAddress( { address } );
 		}
-	}, 250 )
+	}, 500 )
 
 	/**
 	 * Handles the change of map location.
@@ -73,7 +79,7 @@ class MapField extends Component {
 					onChange={ this.handleSearchChange }
 				/>
 
-				<GoogleMap
+				<Map
 					className="cf-map__canvas"
 					lat={ value.lat }
 					lng={ value.lng }
@@ -149,27 +155,6 @@ function handler( props ) {
 
 		switch ( type ) {
 			case 'GEOCODE_ADDRESS':
-				const geocode = ( address ) => {
-					return new Promise( ( resolve, reject ) => {
-						const geocoder = new window.google.maps.Geocoder();
-
-						geocoder.geocode( { address }, ( results, status ) => {
-							if ( status === window.google.maps.GeocoderStatus.OK ) {
-								const { location } = results[ 0 ].geometry;
-
-								resolve( {
-									lat: location.lat(),
-									lng: location.lng()
-								} );
-							} else if ( status === 'ZERO_RESULTS' ) {
-								reject( __( 'The address could not be found.', 'carbon-fields-ui' ) );
-							} else {
-								reject( `${ __( 'Geocode was not successful for the following reason: ', 'carbon-fields-ui' ) } ${ status }` );
-							}
-						} );
-					} );
-				};
-
 				geocode( payload.address )
 					.then( ( { lat, lng } ) => {
 						onChange( id, {

@@ -2,6 +2,28 @@
  * External dependencies.
  */
 import { Component, createRef } from '@wordpress/element';
+import { __ } from '@wordpress/i18n';
+
+export async function googleGeocode( address ) {
+	const geocoder = new window.google.maps.Geocoder();
+
+	return new Promise( ( resolve, reject ) => {
+		geocoder.geocode( { address }, ( results, status ) => {
+			if ( status === window.google.maps.GeocoderStatus.OK ) {
+				const { location } = results[ 0 ].geometry;
+
+				resolve( {
+					lat: location.lat(),
+					lng: location.lng()
+				} );
+			} else if ( status === 'ZERO_RESULTS' ) {
+				reject( __( 'The address could not be found.', 'carbon-fields-ui' ) );
+			} else {
+				reject( `${ __( 'Geocode was not successful for the following reason: ', 'carbon-fields-ui' ) } ${ status }` );
+			}
+		} );
+	} );
+}
 
 class GoogleMap extends Component {
 	/**
