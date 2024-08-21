@@ -71,6 +71,13 @@ class Association_Field extends Field {
 	);
 
 	/**
+	 * Caches results.
+	 *
+	 * @var array
+	 */
+	protected static $cache = array();
+
+	/**
 	 * Create a field from a certain type with the specified label.
 	 *
 	 * @param string $type  Field type
@@ -198,8 +205,9 @@ class Association_Field extends Field {
 		global $wpdb;
 
 		$args = wp_parse_args( $args, array(
-			'page' => 1,
-			'term' => '',
+			'page'  => 1,
+			'term'  => '',
+			'cache' => true
 		) );
 
 		$sql_queries = array();
@@ -211,7 +219,17 @@ class Association_Field extends Field {
 
 			$callback = "get_{$type['type']}_options_sql";
 
-			$sql_statement = $this->$callback( $type_args );
+			if ( $args['cache'] ) {
+				$cache_key = $callback . '_' . md5( maybe_serialize( $type_args ) );
+				if ( isset( self::$cache['get_options']['sql_statement'][ $cache_key ] ) ) {
+					$sql_statement = self::$cache['get_options']['sql_statement'][ $cache_key ];
+				} else {
+					$sql_statement                                                    = $this->$callback( $type_args );
+					self::$cache['get_options']['sql_statement'][ $cache_key ] = $sql_statement;
+				}
+			} else {
+				$sql_statement = $this->$callback( $type_args );
+			}
 
 			$sql_queries[] = $sql_statement;
 		}
@@ -223,7 +241,17 @@ class Association_Field extends Field {
 
 		$sql_queries .= " ORDER BY `title` ASC LIMIT {$per_page} OFFSET {$offset}";
 
-		$results = $wpdb->get_results( $sql_queries );
+		if ( $args['cache'] ) {
+			$cache_key = md5( $sql_queries );
+			if ( isset( self::$cache['get_options']['results'][ $cache_key ] ) ) {
+				$results = self::$cache['get_options']['results'][ $cache_key ];
+			} else {
+				$results                                                    = $wpdb->get_results( $sql_queries );
+				self::$cache['get_options']['results'][ $cache_key ] = $results;
+			}
+		} else {
+			$results = $wpdb->get_results( $sql_queries );
+		}
 
 		$options = array();
 
@@ -241,6 +269,31 @@ class Association_Field extends Field {
 		 */
 		$options = apply_filters( 'carbon_fields_association_field_options', $options, $this->get_base_name() );
 
+		if ( $args['cache'] ) {
+			$cache_key = md5( $sql_queries );
+			if ( isset( self::$cache['get_options']['options'][ $cache_key ] ) ) {
+				return self::$cache['get_options']['options'][ $cache_key ];
+			} else {
+				$options_array                                              = $this->get_options_array( $sql_queries, $options );
+				self::$cache['get_options']['options'][ $cache_key ] = $options_array;
+
+				return $options_array;
+			}
+		} else {
+			return $this->get_options_array( $sql_queries, $options );
+		}
+	}
+
+	/**
+	 * Returns an array with the options from get_options() method.
+	 *
+	 * @param $sql_queries
+	 * @param $options
+	 *
+	 * @return array
+	 */
+	function get_options_array( $sql_queries, $options ) {
+		global $wpdb;
 		return array(
 			'total_options' => $wpdb->get_var( "SELECT COUNT(*) FROM (" . preg_replace( '~(LIMIT .*)$~', '', $sql_queries ) . ") as t" ),
 			'options'       => $options,
