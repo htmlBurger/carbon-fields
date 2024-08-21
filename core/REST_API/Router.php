@@ -62,7 +62,7 @@ class Router {
 			'path'                => '/attachment',
 			'callback'            => 'get_attachment_data',
 			'permission_callback' => 'allow_access',
-			'methods'             => 'GET',
+			'methods'             => array( 'GET', 'POST' ),
 			'args'                => 'attachment_data_args_schema',
 		),
 		'block_renderer' => array(
@@ -384,11 +384,9 @@ class Router {
 	 *
 	 * @return array
 	 */
-	public function get_attachment_data() {
-		$type  = sanitize_text_field( $_GET['type'] );
-		$value = sanitize_text_field( $_GET['value'] );
-
-		return Helper::get_attachment_metadata( $value, $type );
+	public function get_attachment_data( $request ) {
+        $options = $request->get_params();
+		return Helper::get_attachment_metadata( $options['value'], $options['type'] );
 	}
 
 	/**

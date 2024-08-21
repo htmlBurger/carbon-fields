@@ -109,7 +109,6 @@ class Container extends Component {
 				[ `cf-container--tabbed cf-container--${ container.layout }` ]: hasTabs
 			}
 		] );
-
 		return (
 			<div className={ classes }>
 				<input
@@ -156,7 +155,6 @@ class Container extends Component {
 							<div className="cf-container__fields" key={ tabName } hidden={ tabName !== currentTab }>
 								{ map( fieldNames, ( fieldName ) => {
 									const field = find( container.fields, [ 'name', fieldName ] );
-
 									return this.renderField( field );
 								} ) }
 							</div>
