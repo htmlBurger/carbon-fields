@@ -221,7 +221,10 @@ class Association_Field extends Field {
 		$per_page = $this->get_items_per_page();
 		$offset   = ($args['page'] - 1) * $per_page;
 
-		$sql_queries .= " ORDER BY `title` ASC LIMIT {$per_page} OFFSET {$offset}";
+		$order_by = '`title` ASC';
+        $order_by = apply_filters('carbon_fields_association_field_options_order', $order_by, $this->get_base_name(), $args );
+
+		$sql_queries .= " ORDER BY {$order_by} LIMIT {$per_page} OFFSET {$offset}";
 
 		$results = $wpdb->get_results( $sql_queries );
 
