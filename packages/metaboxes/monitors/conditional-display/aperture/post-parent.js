@@ -125,7 +125,10 @@ addFilter( 'carbon-fields.conditional-display-post-parent.gutenberg', 'carbon-fi
 			const isHierarchical = get( postType, [ 'hierarchical' ], false );
 
 			if ( ! isHierarchical ) {
-				return INITIAL_STATE;
+				return {
+					...INITIAL_STATE,
+					post_parent_id: parentId
+				};
 			}
 
 			// Borrowed from https://github.com/WordPress/gutenberg/blob/master/packages/editor/src/components/page-attributes/parent.js
