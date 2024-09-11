@@ -22,6 +22,8 @@ class Block_Container extends Container {
 			'template_lock' => null,
 			'allowed_blocks' => null,
 		),
+		'align' => false,
+		'align_default' => false,
 		'category' => array(
 			'slug' => 'common',
 		),
@@ -300,6 +302,22 @@ class Block_Container extends Container {
 	 */
 	public function set_inner_blocks( $inner_blocks = true ) {
 		$this->settings[ 'inner_blocks' ][ 'enabled' ] = $inner_blocks;
+
+		return $this;
+	}
+
+	/**
+	 * Set the align options available for this block.
+	 *
+	 * Either pass a boolean or an array of values `left`, `center`, `right`, `wide`, and `full`.
+	 *
+	 * @param  array|boolean $inner_blocks
+	 * @param  string|boolean $default
+	 * @return Block_Container
+	 */
+	public function set_align( $align = false, $default = false ) {
+		$this->settings[ 'align' ] = $align;
+		$this->settings[ 'align_default' ] = $default;
 
 		return $this;
 	}

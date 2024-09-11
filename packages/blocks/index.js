@@ -41,6 +41,16 @@ get( window.cf, 'preloaded.blocks', [] ).forEach( ( container ) => {
 	containerDefinitions[ name ] = container;
 	fieldDefinitions[ name ] = container.fields.map( ( field ) => ( { ...field } ) );
 
+	let attributes = {};
+
+	let alignDefault = getBlockSetting( 'align_default', false );
+	if(alignDefault) {
+		attributes['align'] = {
+			'type': 'string',
+			'default': alignDefault
+		};
+	}
+
 	registerBlockType( `carbon-fields/${ name }`, {
 		title: container.title,
 		icon: getBlockSetting( 'icon' ),
@@ -52,13 +62,14 @@ get( window.cf, 'preloaded.blocks', [] ).forEach( ( container ) => {
 			data: {
 				type: 'object',
 				default: fields
-			}
+			},
+			...attributes
 		},
 		supports: {
 			tabs: isPlainObject( getBlockSetting( 'tabs' ) ),
 			preview: getBlockSetting( 'preview' ),
 			innerBlocks: getBlockSetting( 'inner_blocks.enabled' ),
-			alignWide: false,
+			align: getBlockSetting( 'align', false ),
 			anchor: false,
 			html: false
 		},
