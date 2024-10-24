@@ -12,6 +12,7 @@ use Carbon_Fields\Exception\Incorrect_Syntax_Exception;
  */
 abstract class Widget extends \WP_Widget {
 	public static $registered_widget_ids = array();
+    private $registered_field_names = array();
 
 	/**
 	 * Widget Datastore
@@ -223,14 +224,12 @@ abstract class Widget extends \WP_Widget {
 	 * @return boolean
 	 */
 	public function register_field_name( $name ) {
-		static $registered_field_names = array();
-
-		if ( in_array( $name, $registered_field_names ) ) {
+		if ( in_array( $name, $this->registered_field_names ) ) {
 			Incorrect_Syntax_Exception::raise( 'Field name "' . $name . '" already registered' );
 			return false;
 		}
 
-		$registered_field_names[] = $name;
+		$this->registered_field_names[] = $name;
 		return true;
 	}
 
