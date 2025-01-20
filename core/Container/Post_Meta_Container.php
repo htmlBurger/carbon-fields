@@ -11,7 +11,8 @@ use Carbon_Fields\Exception\Incorrect_Syntax_Exception;
  * providing easier user interface to add, edit and delete text, media files,
  * location information and more.
  */
-class Post_Meta_Container extends Container {
+class Post_Meta_Container extends Container
+{
 	/**
 	 * ID of the post the container is working with
 	 *
@@ -21,8 +22,14 @@ class Post_Meta_Container extends Container {
 	protected $post_id;
 
 	/**
+	 * Status of the post the container is working with
+	 *
+	 */
+	protected $post_status;
+
+	/**
 	 * Post Types
-	 * 
+	 *
 	 */
 	protected $post_types;
 
@@ -47,11 +54,12 @@ class Post_Meta_Container extends Container {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function __construct( $id, $title, $type, $condition_collection, $condition_translator ) {
-		parent::__construct( $id, $title, $type, $condition_collection, $condition_translator );
+	public function __construct($id, $title, $type, $condition_collection, $condition_translator)
+	{
+		parent::__construct($id, $title, $type, $condition_collection, $condition_translator);
 
-		if ( ! $this->get_datastore() ) {
-			$this->set_datastore( Datastore::make( 'post_meta' ), $this->has_default_datastore() );
+		if (! $this->get_datastore()) {
+			$this->set_datastore(Datastore::make('post_meta'), $this->has_default_datastore());
 		}
 	}
 
@@ -59,19 +67,20 @@ class Post_Meta_Container extends Container {
 	 * Create DataStore instance, set post ID to operate with (if such exists).
 	 * Bind attach() and save() to the appropriate WordPress actions.
 	 */
-	public function init() {
-		$input = stripslashes_deep( $_GET );
-		$request_post_id = isset( $input['post'] ) ? intval( $input['post'] ) : 0;
-		if ( $request_post_id > 0 ) {
-			$this->set_post_id( $request_post_id );
+	public function init()
+	{
+		$input = stripslashes_deep($_GET);
+		$request_post_id = isset($input['post']) ? intval($input['post']) : 0;
+		if ($request_post_id > 0) {
+			$this->set_post_id($request_post_id);
 		}
 
-		add_action( 'admin_init', array( $this, '_attach' ) );
-		add_action( 'save_post', array( $this, '_save' ) );
+		add_action('admin_init', array($this, '_attach'));
+		add_action('save_post', array($this, '_save'));
 
 		// support for attachments
-		add_action( 'add_attachment', array( $this, '_save' ) );
-		add_action( 'edit_attachment', array( $this, '_save' ) );
+		add_action('add_attachment', array($this, '_save'));
+		add_action('edit_attachment', array($this, '_save'));
 	}
 
 	/**
@@ -81,25 +90,26 @@ class Post_Meta_Container extends Container {
 	 *
 	 * @return bool
 	 */
-	public function is_valid_save() {
+	public function is_valid_save()
+	{
 		$params = func_get_args();
 		$post_id = $params[0];
-		$post_type = get_post_type( $post_id );
+		$post_type = get_post_type($post_id);
 
-		$wp_preview = ( ! empty( $_POST['wp-preview'] ) ) ? $_POST['wp-preview'] : '';
+		$wp_preview = (! empty($_POST['wp-preview'])) ? $_POST['wp-preview'] : '';
 		$in_preview = $wp_preview === 'dopreview';
-		$doing_autosave = defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE;
+		$doing_autosave = defined('DOING_AUTOSAVE') && DOING_AUTOSAVE;
 		$is_revision = $post_type === 'revision';
 
-		if ( ( $doing_autosave || $is_revision ) && ( ! $in_preview || $this->revisions_disabled ) ) {
+		if (($doing_autosave || $is_revision) && (! $in_preview || $this->revisions_disabled)) {
 			return false;
 		}
 
-		if ( ! $this->verified_nonce_in_request() ) {
+		if (! $this->verified_nonce_in_request()) {
 			return false;
 		}
 
-		return $this->is_valid_attach_for_object( $post_id );
+		return $this->is_valid_attach_for_object($post_id);
 	}
 
 	/**
@@ -108,18 +118,19 @@ class Post_Meta_Container extends Container {
 	 *
 	 * @param int $post_id ID of the post against which save() is ran
 	 */
-	public function save( $post_id = null ) {
+	public function save($post_id = null)
+	{
 		// Unhook action to garantee single save
-		remove_action( 'save_post', array( $this, '_save' ) );
+		remove_action('save_post', array($this, '_save'));
 
-		$this->set_post_id( $post_id );
+		$this->set_post_id($post_id);
 
-		foreach ( $this->fields as $field ) {
-			$field->set_value_from_input( Helper::input() );
+		foreach ($this->fields as $field) {
+			$field->set_value_from_input(Helper::input());
 			$field->save();
 		}
 
-		do_action( 'carbon_fields_post_meta_container_saved', $post_id, $this );
+		do_action('carbon_fields_post_meta_container_saved', $post_id, $this);
 	}
 
 	/**
@@ -127,25 +138,27 @@ class Post_Meta_Container extends Container {
 	 *
 	 * @return array
 	 */
-	protected function get_environment_for_request() {
+	protected function get_environment_for_request()
+	{
 		global $pagenow;
 
-		$input = stripslashes_deep( $_GET );
-		$request_post_type = isset( $input['post_type'] ) ? $input['post_type'] : '';
+		$input = stripslashes_deep($_GET);
+		$request_post_type = isset($input['post_type']) ? $input['post_type'] : '';
 		$post_type = '';
 
-		if ( $this->post_id ) {
-			$post_type = get_post_type( $this->post_id );
-		} elseif ( ! empty( $request_post_type ) ) {
+		if ($this->post_id) {
+			$post_type = get_post_type($this->post_id);
+		} elseif (! empty($request_post_type)) {
 			$post_type = $request_post_type;
-		} elseif ( $pagenow === 'post-new.php' ) {
+		} elseif ($pagenow === 'post-new.php') {
 			$post_type = 'post';
 		}
 
-		$post = get_post( $this->post_id );
+		$post = get_post($this->post_id);
 		$post = $post ? $post : null;
 		$environment = array(
 			'post_id' => $post ? $post->ID : 0,
+			'post_status' => $post ? $post->post_status : 'draft',
 			'post_type' => $post ? $post->post_type : $post_type,
 			'post' => $post,
 		);
@@ -157,15 +170,16 @@ class Post_Meta_Container extends Container {
 	 *
 	 * @return bool True if the container is allowed to be attached
 	 */
-	public function is_valid_attach_for_request() {
+	public function is_valid_attach_for_request()
+	{
 		global $pagenow;
 
-		if ( $pagenow !== 'post.php' && $pagenow !== 'post-new.php' ) {
+		if ($pagenow !== 'post.php' && $pagenow !== 'post-new.php') {
 			return false;
 		}
 
 		$environment = $this->get_environment_for_request();
-		if ( ! $environment['post_type'] ) {
+		if (! $environment['post_type']) {
 			return false;
 		}
 
@@ -177,17 +191,19 @@ class Post_Meta_Container extends Container {
 	 *
 	 * @return array
 	 */
-	protected function get_environment_for_object( $object_id ) {
-		$post = get_post( intval( $object_id ) );
+	protected function get_environment_for_object($object_id)
+	{
+		$post = get_post(intval($object_id));
 		$post_type = $post->post_type;
 
-		if ( wp_is_post_revision( $post ) !== false ) {
-			$post = get_post( intval( $post->post_parent ) );
+		if (wp_is_post_revision($post) !== false) {
+			$post = get_post(intval($post->post_parent));
 			$post_type = $post->post_type;
 		}
 
 		$environment = array(
 			'post_id' => $post->ID,
+			'post_status' => $post->post_status,
 			'post' => $post,
 			'post_type' => $post_type,
 		);
@@ -200,41 +216,44 @@ class Post_Meta_Container extends Container {
 	 * @param int $object_id
 	 * @return bool
 	 */
-	public function is_valid_attach_for_object( $object_id = null ) {
-		$post = get_post( intval( $object_id ) );
+	public function is_valid_attach_for_object($object_id = null)
+	{
+		$post = get_post(intval($object_id));
 
-		if ( ! $post ) {
+		if (! $post) {
 			return false;
 		}
 
-		return $this->all_conditions_pass( intval( $post->ID ) );
+		return $this->all_conditions_pass(intval($post->ID));
 	}
 
 	/**
 	 * Add meta box for each of the container post types
 	 */
-	public function attach() {
+	public function attach()
+	{
 		$this->post_types = $this->get_post_type_visibility();
 
-		foreach ( $this->post_types as $post_type ) {
+		foreach ($this->post_types as $post_type) {
 			add_meta_box(
 				$this->get_id(),
 				$this->title,
-				array( $this, 'render' ),
+				array($this, 'render'),
 				$post_type,
 				$this->settings['meta_box_context'],
 				$this->settings['meta_box_priority']
 			);
 
 			$container_id = $this->get_id();
-			add_filter( "postbox_classes_{$post_type}_{$container_id}", array( $this, 'add_postbox_classes' ) );
+			add_filter("postbox_classes_{$post_type}_{$container_id}", array($this, 'add_postbox_classes'));
 		}
 	}
 
 	/**
 	 * Classes to add to the post meta box
 	 */
-	public function add_postbox_classes( $classes ) {
+	public function add_postbox_classes($classes)
+	{
 		$classes[] = 'carbon-box';
 		return $classes;
 	}
@@ -242,7 +261,8 @@ class Post_Meta_Container extends Container {
 	/**
 	 * Output the container markup
 	 */
-	public function render() {
+	public function render()
+	{
 		include \Carbon_Fields\DIR . '/templates/Container/post_meta.php';
 	}
 
@@ -251,14 +271,15 @@ class Post_Meta_Container extends Container {
 	 *
 	 * @param int $post_id
 	 */
-	public function set_post_id( $post_id ) {
+	public function set_post_id($post_id)
+	{
 		$this->post_id = $post_id;
-		$this->get_datastore()->set_object_id( $post_id );
+		$this->get_datastore()->set_object_id($post_id);
 
-		foreach ( $this->fields as $field ) {
+		foreach ($this->fields as $field) {
 			$datastore = $field->get_datastore();
-			if ( $datastore->get_object_id() === 0 ) {
-				$datastore->set_object_id( $post_id );
+			if ($datastore->get_object_id() === 0) {
+				$datastore->set_object_id($post_id);
 			}
 		}
 	}
@@ -268,16 +289,17 @@ class Post_Meta_Container extends Container {
 	 *
 	 * @return array<string>
 	 */
-	public function get_post_type_visibility() {
+	public function get_post_type_visibility()
+	{
 		$all_post_types = get_post_types();
-		$evaluated_collection = $this->condition_collection->evaluate( array( 'post_type' ), true, array(), true );
+		$evaluated_collection = $this->condition_collection->evaluate(array('post_type'), true, array(), true);
 
 		$shown_on = array();
-		foreach ( $all_post_types as $post_type ) {
+		foreach ($all_post_types as $post_type) {
 			$environment = array(
 				'post_type' => $post_type,
 			);
-			if ( $evaluated_collection->is_fulfilled( $environment ) ) {
+			if ($evaluated_collection->is_fulfilled($environment)) {
 				$shown_on[] = $post_type;
 			}
 		}
@@ -295,17 +317,18 @@ class Post_Meta_Container extends Container {
 	 * @param int|string $page page ID or page path
 	 * @return object $this
 	 */
-	public function show_on_page( $page ) {
-		$page_id = absint( $page );
+	public function show_on_page($page)
+	{
+		$page_id = absint($page);
 
-		if ( $page_id && $page_id == $page ) {
-			$page_obj = get_post( $page_id );
+		if ($page_id && $page_id == $page) {
+			$page_obj = get_post($page_id);
 		} else {
-			$page_obj = get_page_by_path( $page );
+			$page_obj = get_page_by_path($page);
 		}
-		$page_id = ( $page_obj ) ? $page_obj->ID : -1;
+		$page_id = ($page_obj) ? $page_obj->ID : -1;
 
-		$this->where( 'post_id', '=', $page_id );
+		$this->where('post_id', '=', $page_id);
 
 		return $this;
 	}
@@ -317,10 +340,11 @@ class Post_Meta_Container extends Container {
 	 * @param string $parent_page_path
 	 * @return object $this
 	 */
-	public function show_on_page_children( $parent_page_path ) {
-		$page = get_page_by_path( $parent_page_path );
-		$page_id = ( $page ) ? $page->ID : -1;
-		$this->where( 'post_parent_id', '=', $page_id );
+	public function show_on_page_children($parent_page_path)
+	{
+		$page = get_page_by_path($parent_page_path);
+		$page_id = ($page) ? $page->ID : -1;
+		$this->where('post_parent_id', '=', $page_id);
 		return $this;
 	}
 
@@ -331,14 +355,15 @@ class Post_Meta_Container extends Container {
 	 * @param string|array $template_path
 	 * @return object $this
 	 */
-	public function show_on_template( $template_path ) {
+	public function show_on_template($template_path)
+	{
 		// Backwards compatibility where only pages support templates
-		if ( version_compare( get_bloginfo( 'version' ), '4.7', '<' ) ) {
-			$this->show_on_post_type( 'page' );
+		if (version_compare(get_bloginfo('version'), '4.7', '<')) {
+			$this->show_on_post_type('page');
 		}
 
-		$template_paths = is_array( $template_path ) ? $template_path : array( $template_path );
-		$this->where( 'post_template', 'IN', $template_paths );
+		$template_paths = is_array($template_path) ? $template_path : array($template_path);
+		$this->where('post_template', 'IN', $template_paths);
 		return $this;
 	}
 
@@ -349,9 +374,10 @@ class Post_Meta_Container extends Container {
 	 * @param string|array $template_path
 	 * @return object $this
 	 */
-	public function hide_on_template( $template_path ) {
-		$template_paths = is_array( $template_path ) ? $template_path : array( $template_path );
-		$this->where( 'post_template', 'NOT IN', $template_paths );
+	public function hide_on_template($template_path)
+	{
+		$template_paths = is_array($template_path) ? $template_path : array($template_path);
+		$this->where('post_template', 'NOT IN', $template_paths);
 		return $this;
 	}
 
@@ -363,8 +389,9 @@ class Post_Meta_Container extends Container {
 	 * @param int $level
 	 * @return object $this
 	 */
-	public function show_on_level( $level ) {
-		$this->where( 'post_level', '=', intval( $level ) );
+	public function show_on_level($level)
+	{
+		$this->where('post_level', '=', intval($level));
 		return $this;
 	}
 
@@ -376,9 +403,10 @@ class Post_Meta_Container extends Container {
 	 * @param string|array $post_format Name of the format as listed on Codex
 	 * @return object $this
 	 */
-	public function show_on_post_format( $post_format ) {
-		$post_formats = is_array( $post_format ) ? $post_format : array( $post_format );
-		$this->where( 'post_format', 'IN', $post_formats );
+	public function show_on_post_format($post_format)
+	{
+		$post_formats = is_array($post_format) ? $post_format : array($post_format);
+		$this->where('post_format', 'IN', $post_formats);
 		return $this;
 	}
 
@@ -389,9 +417,10 @@ class Post_Meta_Container extends Container {
 	 * @param string|array $post_types
 	 * @return object $this
 	 */
-	public function show_on_post_type( $post_types ) {
-		$post_types = is_array( $post_types ) ? $post_types : array( $post_types );
-		$this->where( 'post_type', 'IN', $post_types );
+	public function show_on_post_type($post_types)
+	{
+		$post_types = is_array($post_types) ? $post_types : array($post_types);
+		$this->where('post_type', 'IN', $post_types);
 		return $this;
 	}
 
@@ -404,12 +433,13 @@ class Post_Meta_Container extends Container {
 	 * @param string $category_slug
 	 * @return object $this
 	 */
-	public function show_on_category( $category_slug ) {
-		$this->where( 'post_term', '=', array(
+	public function show_on_category($category_slug)
+	{
+		$this->where('post_term', '=', array(
 			'value' => $category_slug,
 			'field' => 'slug',
 			'taxonomy' => 'category',
-		) );
+		));
 		return $this;
 	}
 
@@ -421,12 +451,13 @@ class Post_Meta_Container extends Container {
 	 * @param string $term_slug
 	 * @return object $this
 	 */
-	public function show_on_taxonomy_term( $term_slug, $taxonomy_slug ) {
-		$this->where( 'post_term', '=', array(
+	public function show_on_taxonomy_term($term_slug, $taxonomy_slug)
+	{
+		$this->where('post_term', '=', array(
 			'value' => $term_slug,
 			'field' => 'slug',
 			'taxonomy' => $taxonomy_slug,
-		) );
+		));
 		return $this;
 	}
 
@@ -436,7 +467,8 @@ class Post_Meta_Container extends Container {
 	 * @see https://codex.wordpress.org/Function_Reference/add_meta_box
 	 * @param string $context ('normal', 'advanced', 'side' or the custom `carbon_fields_after_title`)
 	 */
-	public function set_context( $context ) {
+	public function set_context($context)
+	{
 		$this->settings['meta_box_context'] = $context;
 		return $this;
 	}
@@ -447,17 +479,20 @@ class Post_Meta_Container extends Container {
 	 * @see https://codex.wordpress.org/Function_Reference/add_meta_box
 	 * @param string $priority ('high', 'core', 'default' or 'low')
 	 */
-	public function set_priority( $priority ) {
+	public function set_priority($priority)
+	{
 		$this->settings['meta_box_priority'] = $priority;
 		return $this;
 	}
 
-	public function set_revisions_disabled( $revisions_disabled ) {
+	public function set_revisions_disabled($revisions_disabled)
+	{
 		$this->revisions_disabled = $revisions_disabled;
 		return $this;
 	}
 
-	public function get_revisions_disabled() {
+	public function get_revisions_disabled()
+	{
 		return $this->revisions_disabled;
 	}
 }
